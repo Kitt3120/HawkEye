@@ -56,17 +56,17 @@ namespace HawkEye.Logging
         /// List of generated LogMessages.
         /// This list is being modified by the LoggingSection object itself only and mustn't be modified otherwise.
         /// </summary>
-        private List<LogMessage> messages;
+        private List<LogMessage> logMessages;
 
         /// <summary>
-        /// Whether or not the LoggingSection has messages.
+        /// Whether or not the LoggingSection has LogMessages.
         /// </summary>
-        public bool HasMessages { get { return messages != null && messages.Any(); } }
+        public bool HasMessages { get { return logMessages != null && logMessages.Any(); } }
 
         /// <summary>
         /// Used for thread-safe modification of the messages list.
         /// </summary>
-        private object messagesLock;
+        private object logMessagesLock;
 
         /// <summary>
         /// The full path of the LoggingSection, combining all parents' names recursively and
@@ -90,7 +90,7 @@ namespace HawkEye.Logging
         /// <summary>
         /// Constructs a LoggingSection.
         /// </summary>
-        /// <param name="obj">Object that should provide the name</param>
+        /// <param name="obj">Object that should provide the name of the LoggingSection</param>
         /// <param name="parent">Parent LoggingSection</param>
         public LoggingSection(object obj, LoggingSection parent = null) : this(obj.GetType().Name + (obj.GetType().GenericTypeArguments.Length > 0 ? $"<{string.Join(", ", obj.GetType().GenericTypeArguments.Select(type => type.Name))}>" : ""), parent)
         { }
@@ -114,38 +114,52 @@ namespace HawkEye.Logging
             }
 
             children = new List<LoggingSection>();
-            messages = new List<LogMessage>();
+            logMessages = new List<LogMessage>();
 
             childrenLock = new object();
-            messagesLock = new object();
+            logMessagesLock = new object();
 
             Disposed = false;
         }
 
         /// <summary>
         /// Generates a LogMessage for this LoggingSection.
+        /// Still works after LoggingSection has been disposed, but LogMessage will not be added to the message list.
         /// </summary>
         /// <param name="logLevel">The LogLevel to be used for the LogMessage</param>
         /// <param name="message">The message to be used for the LogMessage</param>
-        /// <returns>The generated LogMessage object or null if LoggingSection was disposed.</returns>
-        public LogMessage Log(LogLevel logLevel, string message)
+        /// <returns>The generated LogMessage object.</returns>
+        public LogMessage CreateLogMessage(LogLevel logLevel, string message)
         {
-            if (Disposed)
-                return null; //TODO: Throw exception
-
             LogMessage logMessage = new LogMessage(this, logLevel, message);
-            lock (messagesLock)
-                messages.Add(logMessage);
+            if (!Disposed)
+                lock (logMessagesLock)
+                    logMessages.Add(logMessage);
+
             return logMessage;
         }
 
         /// <summary>
+        /// Wraps the LoggingSection's LogMessages in a read-only wrapper.
+        /// </summary>
+        /// <returns>Read-only Collection of the LogMessages contained in the LoggingSection or null if LoggingSection was disposed.</returns>
+        public IReadOnlyCollection<LogMessage> GetLogMessages()
+        {
+            if (Disposed)
+                return null;
+
+            return logMessages.AsReadOnly();
+        }
+
+        /// <summary>
         /// Disposes the LoggingSection and its children.
+        /// The LoggingSection is in an unusable state afterwards.
         /// </summary>
         public void Dispose()
         {
             if (Disposed)
                 return;
+
             while (!children.Any())
                 children.First().Dispose();
 
@@ -154,17 +168,24 @@ namespace HawkEye.Logging
                     Parent.children.Remove(this);
 
             Parent = null;
-            messages = null;
+            children = null;
+            logMessages = null;
             Disposed = true;
         }
 
-        //Wrappers
-        //public void Debug(string message) => Logger.Log(new LogMessage(this, LogLevel.Debug, message, DateTime.Now));
-        //public void Verbose(string message) => Logger.Log(new LogMessage(this, LogLevel.Verbose, message, DateTime.Now));
-        //public void Info(string message) => Logger.Log(new LogMessage(this, LogLevel.Info, message, DateTime.Now));
-        //public void Warning(string message) => Logger.Log(new LogMessage(this, LogLevel.Warning, message, DateTime.Now));
-        //public void Error(string message) => Logger.Log(new LogMessage(this, LogLevel.Error, message, DateTime.Now));
-        //public void Critical(string message) => Logger.Log(new LogMessage(this, LogLevel.Critical, message, DateTime.Now));
-        //public void Log(LogLevel logLevel, string message) => Logger.Log(new LogMessage(this, logLevel, message, DateTime.Now));
+        //Wrappers for performing actual logging
+        public void Debug(string message) => Log(LogLevel.DEBUG, message);
+
+        public void Verbose(string message) => Log(LogLevel.VERBOSE, message);
+
+        public void Info(string message) => Log(LogLevel.INFO, message);
+
+        public void Warning(string message) => Log(LogLevel.WARNING, message);
+
+        public void Error(string message) => Log(LogLevel.ERROR, message);
+
+        public void Critical(string message) => Log(LogLevel.CRITICAL, message);
+
+        public void Log(LogLevel logLevel, string message) => Logger.Log(CreateLogMessage(logLevel, message));
     }
 }
