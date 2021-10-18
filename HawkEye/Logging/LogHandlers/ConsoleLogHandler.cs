@@ -6,19 +6,14 @@ using System.Threading.Tasks;
 
 namespace HawkEye.Logging.LogHandlers
 {
-    public class ConsoleLogHandler : LogHandler
+    public class ConsoleLogHandler : PreFormattedLogHandler
     {
-        public bool ShortFormat { get; set; }
+        public ConsoleLogHandler(string format = null, LogLevel[] enabledLogLevels = null) : base(format, enabledLogLevels)
+        { }
 
-        public ConsoleLogHandler(bool shortFormat, LogLevel[] enabledLogLevels = null) : base(enabledLogLevels)
-
+        public override void Output(string message)
         {
-            ShortFormat = shortFormat;
-        }
-
-        public override void OnLog(object source, LogEventArgs eventArgs)
-        {
-            Console.WriteLine(ShortFormat ? eventArgs.LogMessage.ToShortString() : eventArgs.LogMessage.ToString());
+            Console.WriteLine(message);
         }
     }
 }

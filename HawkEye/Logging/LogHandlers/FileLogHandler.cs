@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace HawkEye.Logging.LogHandlers
 {
-    internal class FileLogHandler : LogHandler
+    internal class FileLogHandler : PreFormattedLogHandler
     {
-        public bool ShortFormat { get; set; }
         private StreamWriter streamWriter;
 
-        public FileLogHandler(string path, bool shortFormat = false, LogLevel[] enabledLogLevels = null) : base(enabledLogLevels)
+        public FileLogHandler(string path, string format = null, LogLevel[] enabledLogLevels = null) : base(format, enabledLogLevels)
         {
             using LoggingSection log = new LoggingSection(this);
-
-            ShortFormat = shortFormat;
 
             DirectoryInfo parent = Directory.GetParent(path);
             if (!parent.Exists)
@@ -37,10 +34,10 @@ namespace HawkEye.Logging.LogHandlers
             }
         }
 
-        public override void OnLog(object source, LogEventArgs eventArgs)
+        public override void Output(string message)
         {
             if (streamWriter != null)
-                streamWriter.WriteLine(ShortFormat ? eventArgs.LogMessage.ToShortString() : eventArgs.LogMessage.ToString());
+                streamWriter.WriteLine(message);
         }
     }
 }

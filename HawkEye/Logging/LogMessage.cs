@@ -48,23 +48,5 @@ namespace HawkEye.Logging
             Message = message;
             Timestamp = DateTime.Now;
         }
-
-        /// <summary>
-        /// Converts the LogMessage into a string.
-        /// </summary>
-        /// <returns>The LogMessage formatted as a string.</returns>
-        public override string ToString()
-        { //TODO: Move format to LoggerSettings
-            return $"{Timestamp.ToString("dd.MM.yyyy hh:mm:ss")} - [{LogLevel}] - [{LoggingSection.FullPath}]: {Message}";
-        }
-
-        /// <summary>
-        /// Converts the LogMessage into a shorter string.
-        /// </summary>
-        /// <returns>The LogMessage formatted as a shorter string.</returns>
-        public string ToShortString()
-        {
-            return $"[{LogLevel}] - [{LoggingSection.FullPath}]: {Message}";
-        }
     }
 }

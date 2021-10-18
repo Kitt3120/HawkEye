@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,30 +9,32 @@ namespace HawkEye.Logging.LogHandlers
 {
     public abstract class LogHandler
     {
-        private List<LogLevel> enabledLevels;
+        private List<LogLevel> enabledLogLevels;
 
         public LogHandler(LogLevel[] enabledLogLevels = null)
         {
             if (enabledLogLevels == null)
-                enabledLevels = new List<LogLevel>((LogLevel[])Enum.GetValues(typeof(LogLevel)));
+                this.enabledLogLevels = new List<LogLevel>((LogLevel[])Enum.GetValues(typeof(LogLevel)));
             else
-                enabledLevels = new List<LogLevel>(enabledLogLevels);
+                this.enabledLogLevels = new List<LogLevel>(enabledLogLevels);
         }
 
-        public abstract void OnLog(object source, LogEventArgs eventArgs);
+        public abstract void OnLog(object source, LogEventArgs logEventArgs);
 
         public void SetEnabled(LogLevel logLevel, bool enabled)
         {
             if (enabled && !IsEnabled(logLevel))
-                enabledLevels.Add(logLevel);
+                enabledLogLevels.Add(logLevel);
             else if (!enabled)
-                enabledLevels.Remove(logLevel);
+                enabledLogLevels.Remove(logLevel);
         }
 
-        public bool IsEnabled(LogLevel logLevel) => enabledLevels.Contains(logLevel);
+        public bool IsEnabled(LogLevel logLevel) => enabledLogLevels.Contains(logLevel);
 
         public void Enable(LogLevel logLevel) => SetEnabled(logLevel, true);
 
         public void Disable(LogLevel logLevel) => SetEnabled(logLevel, false);
+
+        public ReadOnlyCollection<LogLevel> GetEnabledLogLevels() => enabledLogLevels.AsReadOnly();
     }
 }
