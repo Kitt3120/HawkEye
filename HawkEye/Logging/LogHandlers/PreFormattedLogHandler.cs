@@ -20,12 +20,12 @@ namespace HawkEye.Logging.LogHandlers
                 Format = format;
         }
 
-        public override void OnLog(object source, LogEventArgs logEventArgs) => Output(
+        public override void HandleLogMessage(LogMessage logMessage) => Output(
             Format
-            .Replace("%loggingsection%", logEventArgs.LogMessage.LoggingSection.FullPath)
-            .Replace("%loglevel%", logEventArgs.LogMessage.LogLevel.ToString())
-            .Replace("%message%", logEventArgs.LogMessage.Message)
-            .Replace("%datetime%", logEventArgs.LogMessage.Timestamp.ToString(DateTimeFormat))
+            .Replace("%loggingsection%", logMessage.LoggingSection.FullPath)
+            .Replace("%loglevel%", logMessage.LogLevel.ToString())
+            .Replace("%message%", logMessage.Message)
+            .Replace("%datetime%", logMessage.Timestamp.ToString(DateTimeFormat))
             );
 
         public abstract void Output(string message);

@@ -19,7 +19,13 @@ namespace HawkEye.Logging.LogHandlers
                 this.enabledLogLevels = new List<LogLevel>(enabledLogLevels);
         }
 
-        public abstract void OnLog(object source, LogEventArgs logEventArgs);
+        public void OnLog(object source, LogEventArgs logEventArgs)
+        {
+            if (IsEnabled(logEventArgs.LogMessage.LogLevel))
+                HandleLogMessage(logEventArgs.LogMessage);
+        }
+
+        public abstract void HandleLogMessage(LogMessage logMessage);
 
         public void SetEnabled(LogLevel logLevel, bool enabled)
         {
