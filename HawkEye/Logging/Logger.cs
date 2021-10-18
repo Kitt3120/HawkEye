@@ -6,13 +6,6 @@ using System.Threading.Tasks;
 
 namespace HawkEye.Logging
 {
-    //TODO: Idea for future: LogHandlers
-    //ILogHandler -> LogLevel defined and Output(); method
-    //Implementations: ConsoleLogHandler (Outputs into console), FileLogHandler (Outputs into file)
-    //LogHandlers will be registered in Logger
-    //On log, Logger will loop through registered LogHandlers,
-    // check if LogLevel is met, then call Output() function of LogHandler.
-
     public class LogEventArgs : EventArgs
     {
         public LogMessage LogMessage { get; private set; }
