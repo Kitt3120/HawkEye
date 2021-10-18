@@ -34,7 +34,7 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has a parent LoggingSection and is one of its children.
         /// </summary>
-        public bool HasParent { get { return Parent != null; } }
+        public bool HasParent { get { return Parent != null && !Parent.Disposed; } }
 
         /// <summary>
         /// List of registered child LoggingSections.
@@ -160,8 +160,8 @@ namespace HawkEye.Logging
             if (Disposed)
                 return;
 
-            while (!children.Any())
-                children.First().Dispose();
+            for (int i = children.Count - 1; i >= 0; i--)
+                children[i].Dispose();
 
             if (HasParent)
                 lock (Parent.childrenLock)
