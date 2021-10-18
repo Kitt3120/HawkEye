@@ -13,8 +13,19 @@ namespace HawkEye.Logging
     //On log, Logger will loop through registered LogHandlers,
     // check if LogLevel is met, then call Output() function of LogHandler.
 
+    public class LogEventArgs : EventArgs
+    {
+        public LogMessage LogMessage { get; private set; }
+
+        public LogEventArgs(LogMessage logMessage)
+        {
+            LogMessage = logMessage;
+        }
+    }
+
     /// <summary>
-    /// The Logger acts as a centralized point where all logging by LoggingSections is handled.
+    /// The Logger acts as a middleware between LoggingSections and LogHandlers.
+    /// All logging traffic by LoggingSection goes through the Logger and is spread to the LogHandlers.
     /// </summary>
     public static class Logger
     {
@@ -23,16 +34,12 @@ namespace HawkEye.Logging
         /// </summary>
         private static LoggingSection log = new LoggingSection("Logger");
 
-        /// <summary>
-        /// List of enabled LogLevels.
-        /// TODO: Remove after LogHandler implementation.
-        /// </summary>
-        private static List<LogLevel> enabledLevels { get; } = new List<LogLevel>((LogLevel[])Enum.GetValues(typeof(LogLevel)));
+        public static event EventHandler<LogEventArgs> LogHandlers;
 
         /// <summary>
         /// Handles logging.
         /// Called by LoggingSections.
-        /// Not intended to be used manually.
+        /// Not intended to be used manually. Use Wrappers from LoggingSection.
         /// </summary>
         /// <param name="logMessage"></param>
         internal static void Log(LogMessage logMessage)
@@ -46,9 +53,13 @@ namespace HawkEye.Logging
                 }
             }
 
-            //TODO: Replace with LogHandler implementation
-            if (enabledLevels.Contains(logMessage.LogLevel))
-                Console.WriteLine(logMessage.ToShortString());
+            OnLog(logMessage);
+        }
+
+        private static void OnLog(LogMessage logMessage)
+        {
+            if (LogHandlers != null)
+                LogHandlers.Invoke(null, new LogEventArgs(logMessage));
         }
     }
 }
