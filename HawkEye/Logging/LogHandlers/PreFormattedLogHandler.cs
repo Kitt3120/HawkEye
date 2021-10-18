@@ -8,15 +8,12 @@ namespace HawkEye.Logging.LogHandlers
 {
     public abstract class PreFormattedLogHandler : LogHandler
     {
-        private static readonly string defaultFormat = "%datetime% - [%loglevel%] - [%loggingsection%]: %message%";
-        public string Format { get; private set; }
+        public string Format { get; private set; } = "%datetime% - [%loglevel%] - [%loggingsection%]: %message%";
         public string DateTimeFormat { get; set; }
 
         public PreFormattedLogHandler(string format = null, LogLevel[] enabledLogLevels = null) : base(enabledLogLevels)
         {
-            if (format == null)
-                Format = defaultFormat;
-            else
+            if (format != null)
                 Format = format;
         }
 
