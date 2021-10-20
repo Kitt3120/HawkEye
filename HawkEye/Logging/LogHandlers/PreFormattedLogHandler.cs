@@ -26,11 +26,14 @@ namespace HawkEye.Logging.LogHandlers
         /// Constructs a PreFormattedLogHandler
         /// </summary>
         /// <param name="format">Pattern according to which a LogMessage is converted into a string. If not provided, a default pattern will be used.</param>
+        /// <param name="dateTimeFormat">Pattern according to which the DateTime part of the LogMessage should be converted. If not provided, a default pattern will be used.</param>
         /// <param name="enabledLogLevels">Enabled LogLevels. If not provided, all LogLevels are enabled by default.</param>
-        public PreFormattedLogHandler(string format = null, LogLevel[] enabledLogLevels = null) : base(enabledLogLevels)
+        public PreFormattedLogHandler(string format = null, string dateTimeFormat = null, LogLevel[] enabledLogLevels = null) : base(enabledLogLevels)
         {
             if (format != null)
                 Format = format;
+            if (dateTimeFormat != null)
+                DateTimeFormat = dateTimeFormat;
         }
 
         /// <summary>
