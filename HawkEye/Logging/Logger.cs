@@ -6,10 +6,20 @@ using System.Threading.Tasks;
 
 namespace HawkEye.Logging
 {
+    /// <summary>
+    /// Custom args which are served through an event to subscribed LogHandlers.
+    /// </summary>
     public class LogEventArgs : EventArgs
     {
+        /// <summary>
+        /// The LogMessage that is held by the LogEventsArgs object.
+        /// </summary>
         public LogMessage LogMessage { get; private set; }
 
+        /// <summary>
+        /// Constructs a LogEventArgs object.
+        /// </summary>
+        /// <param name="logMessage">The LogMessage that should be held by the LogEventsArgs object.</param>
         public LogEventArgs(LogMessage logMessage)
         {
             LogMessage = logMessage;
@@ -18,7 +28,7 @@ namespace HawkEye.Logging
 
     /// <summary>
     /// The Logger acts as a middleware between LoggingSections and LogHandlers.
-    /// All logging traffic by LoggingSection goes through the Logger and is spread to the LogHandlers.
+    /// All logging traffic by LoggingSections goes through the Logger and is spread to subscribed LogHandlers by it.
     /// </summary>
     public static class Logger
     {
@@ -32,7 +42,7 @@ namespace HawkEye.Logging
         /// <summary>
         /// Handles logging.
         /// Called by LoggingSections.
-        /// Not intended to be used manually. Use Wrappers from LoggingSection.
+        /// Not intended to be used manually. Use Wrappers provided by a LoggingSection.
         /// </summary>
         /// <param name="logMessage"></param>
         internal static void Log(LogMessage logMessage)

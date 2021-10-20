@@ -34,7 +34,7 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has a parent LoggingSection and is one of its children.
         /// </summary>
-        public bool HasParent { get { return Parent != null && !Parent.Disposed; } }
+        public bool HasParent { get { return !Disposed && Parent != null && !Parent.Disposed; } }
 
         /// <summary>
         /// List of registered child LoggingSections.
@@ -45,7 +45,7 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has child LoggingSections.
         /// </summary>
-        public bool HasChildren { get { return children != null && children.Any(); } }
+        public bool HasChildren { get { return !Disposed && children != null && children.Any(); } }
 
         /// <summary>
         /// Used for thread-safe modification of the children list.
@@ -61,7 +61,7 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has LogMessages.
         /// </summary>
-        public bool HasMessages { get { return logMessages != null && logMessages.Any(); } }
+        public bool HasMessages { get { return !Disposed && logMessages != null && logMessages.Any(); } }
 
         /// <summary>
         /// Used for thread-safe modification of the messages list.
@@ -167,9 +167,6 @@ namespace HawkEye.Logging
                 lock (Parent.childrenLock)
                     Parent.children.Remove(this);
 
-            Parent = null;
-            children = null;
-            logMessages = null;
             Disposed = true;
         }
 
