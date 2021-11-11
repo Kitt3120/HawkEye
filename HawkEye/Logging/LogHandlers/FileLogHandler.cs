@@ -23,7 +23,7 @@ namespace HawkEye.Logging.LogHandlers
         /// <param name="path">Path to the file that should be written into</param>
         /// <param name="format">Pattern according to which a LogMessage is converted into a string. If not provided, a default pattern will be used.</param>
         /// <param name="enabledLogLevels">Enabled LogLevels. If not provided, all LogLevels are enabled by default.</param>
-        public FileLogHandler(string path, string format = null, LogLevel[] enabledLogLevels = null) : base(format, enabledLogLevels)
+        public FileLogHandler(string path, string format = null, LogLevel[] enabledLogLevels = null) : base(format, null, enabledLogLevels)
         {
             using LoggingSection log = new LoggingSection(this);
 

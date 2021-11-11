@@ -16,7 +16,7 @@ namespace HawkEye.Logging.LogHandlers
         /// </summary>
         /// <param name="format">Pattern according to which a LogMessage is converted into a string. If not provided, a default pattern will be used.</param>
         /// <param name="enabledLogLevels">Enabled LogLevels. If not provided, all LogLevels are enabled by default.</param>
-        public ConsoleLogHandler(string format = null, LogLevel[] enabledLogLevels = null) : base(format, enabledLogLevels)
+        public ConsoleLogHandler(string format = null, LogLevel[] enabledLogLevels = null) : base(format, null, enabledLogLevels)
         { }
 
         /// <summary>

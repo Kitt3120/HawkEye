@@ -152,6 +152,18 @@ namespace HawkEye.Logging
         }
 
         /// <summary>
+        /// Wraps the LoggingSection's Children in a read-only wrapper.
+        /// </summary>
+        /// <returns>Read-only Collection of the LoggingSection's Children or null if LoggingSection was disposed.</returns>
+        public IReadOnlyCollection<LoggingSection> GetChildren()
+        {
+            if (Disposed)
+                return null;
+
+            return children.AsReadOnly();
+        }
+
+        /// <summary>
         /// Disposes the LoggingSection and its children.
         /// The LoggingSection is in an unusable state afterwards.
         /// </summary>
