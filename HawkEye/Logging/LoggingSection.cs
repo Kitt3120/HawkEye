@@ -34,7 +34,8 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has a parent LoggingSection and is one of its children.
         /// </summary>
-        public bool HasParent { get { return !Disposed && Parent != null && !Parent.Disposed; } }
+        public bool HasParent
+        { get { return !Disposed && Parent != null && !Parent.Disposed; } }
 
         /// <summary>
         /// List of registered child LoggingSections.
@@ -45,7 +46,8 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has child LoggingSections.
         /// </summary>
-        public bool HasChildren { get { return !Disposed && children != null && children.Any(); } }
+        public bool HasChildren
+        { get { return !Disposed && children != null && children.Any(); } }
 
         /// <summary>
         /// Used for thread-safe modification of the children list.
@@ -61,7 +63,8 @@ namespace HawkEye.Logging
         /// <summary>
         /// Whether or not the LoggingSection has LogMessages.
         /// </summary>
-        public bool HasMessages { get { return !Disposed && logMessages != null && logMessages.Any(); } }
+        public bool HasMessages
+        { get { return !Disposed && logMessages != null && logMessages.Any(); } }
 
         /// <summary>
         /// Used for thread-safe modification of the messages list.
@@ -183,18 +186,23 @@ namespace HawkEye.Logging
         }
 
         //Wrappers for performing actual logging
-        public void Debug(string message) => Log(LogLevel.DEBUG, message);
+        public LogMessage Debug(string message) => Log(LogLevel.DEBUG, message);
 
-        public void Verbose(string message) => Log(LogLevel.VERBOSE, message);
+        public LogMessage Verbose(string message) => Log(LogLevel.VERBOSE, message);
 
-        public void Info(string message) => Log(LogLevel.INFO, message);
+        public LogMessage Info(string message) => Log(LogLevel.INFO, message);
 
-        public void Warning(string message) => Log(LogLevel.WARNING, message);
+        public LogMessage Warning(string message) => Log(LogLevel.WARNING, message);
 
-        public void Error(string message) => Log(LogLevel.ERROR, message);
+        public LogMessage Error(string message) => Log(LogLevel.ERROR, message);
 
-        public void Critical(string message) => Log(LogLevel.CRITICAL, message);
+        public LogMessage Critical(string message) => Log(LogLevel.CRITICAL, message);
 
-        public void Log(LogLevel logLevel, string message) => Logger.Log(CreateLogMessage(logLevel, message));
+        public LogMessage Log(LogLevel logLevel, string message)
+        {
+            LogMessage logMessage = CreateLogMessage(logLevel, message);
+            Logger.Log(logMessage);
+            return logMessage;
+        }
     }
 }
