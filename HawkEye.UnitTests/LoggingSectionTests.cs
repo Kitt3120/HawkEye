@@ -166,5 +166,95 @@ namespace HawkEye.UnitTests
             //Assert
             Assert.Equal("List`1<Object>", loggingSection.Name);
         }
+
+        [Fact]
+        public void Log_ReturnedLogMessage_ShouldHaveLogLevelDebug()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+            LogMessage logMessage;
+
+            //Act
+            logMessage = loggingSection.Log(LogLevel.DEBUG, "Test");
+
+            //Assert
+            Assert.NotNull(logMessage);
+            Assert.Equal(LogLevel.DEBUG, logMessage.LogLevel);
+        }
+
+        [Fact]
+        public void Log_ReturnedLogMessage_ShouldHaveLogLevelVerbose()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+            LogMessage logMessage;
+
+            //Act
+            logMessage = loggingSection.Log(LogLevel.VERBOSE, "Test");
+
+            //Assert
+            Assert.NotNull(logMessage);
+            Assert.Equal(LogLevel.VERBOSE, logMessage.LogLevel);
+        }
+
+        [Fact]
+        public void Log_ReturnedLogMessage_ShouldHaveLogLevelInfo()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+            LogMessage logMessage;
+
+            //Act
+            logMessage = loggingSection.Log(LogLevel.INFO, "Test");
+
+            //Assert
+            Assert.NotNull(logMessage);
+            Assert.Equal(LogLevel.INFO, logMessage.LogLevel);
+        }
+
+        [Fact]
+        public void Log_ReturnedLogMessage_ShouldHaveLogLevelWarning()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+            LogMessage logMessage;
+
+            //Act
+            logMessage = loggingSection.Log(LogLevel.WARNING, "Test");
+
+            //Assert
+            Assert.NotNull(logMessage);
+            Assert.Equal(LogLevel.WARNING, logMessage.LogLevel);
+        }
+
+        [Fact]
+        public void Log_ReturnedLogMessage_ShouldHaveLogLevelError()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+            LogMessage logMessage;
+
+            //Act
+            logMessage = loggingSection.Log(LogLevel.ERROR, "Test");
+
+            //Assert
+            Assert.NotNull(logMessage);
+            Assert.Equal(LogLevel.ERROR, logMessage.LogLevel);
+        }
+
+        [Fact]
+        public void Log_ReturnedLogMessage_ShouldHaveLogLevelCritical()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+            LogMessage logMessage;
+
+            //Act
+            logMessage = loggingSection.Log(LogLevel.CRITICAL, "Test");
+
+            //Assert
+            Assert.NotNull(logMessage);
+            Assert.Equal(LogLevel.CRITICAL, logMessage.LogLevel);
+        }
     }
 }
