@@ -72,7 +72,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void LogMessages_ShouldBeEmptyListAfterConstruction()
+        public void LogMessages_ShouldBeEmptyAfterConstruction()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -82,6 +82,20 @@ namespace HawkEye.UnitTests
             //Assert
             Assert.NotNull(loggingSection.GetLogMessages());
             Assert.True(loggingSection.GetLogMessages().Count == 0);
+        }
+
+        [Fact]
+        public void LogMessages_ShouldHaveOneEntryAfterLogging()
+        {
+            //Arrange
+            LoggingSection loggingSection = new LoggingSection(this);
+
+            //Act
+            loggingSection.Info("Test");
+
+            //Assert
+            Assert.NotNull(loggingSection.GetLogMessages());
+            Assert.True(loggingSection.GetLogMessages().Count == 1);
         }
 
         [Fact]
@@ -104,7 +118,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void CreateChild_ParentIsSetInChild()
+        public void CreateChild_ParentShouldBeSetInChild()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -117,7 +131,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void CreateChild_ParentContainsChild()
+        public void CreateChild_ParentshouldContainChild()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -130,7 +144,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void LoggingSection_CorrectNameIsSetFromString()
+        public void LoggingSection_CorrectNameShouldBeSetFromString()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection("Test");
@@ -142,7 +156,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void LoggingSection_CorrectNameIsSetFromObject()
+        public void LoggingSection_CorrectNameShouldBeSetFromObject()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -154,7 +168,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void LoggingSection_CorrectNameIsSetFromObjectWithGenericType()
+        public void LoggingSection_CorrectNameShouldBeSetFromObjectWithGenericType()
         {
             //Arrange
             List<object> list = new List<object>();
