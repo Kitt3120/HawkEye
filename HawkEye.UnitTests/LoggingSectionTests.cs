@@ -8,7 +8,7 @@ namespace HawkEye.UnitTests
     public class LoggingSectionTests
     {
         [Fact]
-        public void LoggingSection_ShouldBeUndisposedAfterConstruction()
+        public void Disposed_ShouldBeFalseAfterConstruction()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -20,7 +20,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void Dispose_ShouldBeTrueAfterDisposal()
+        public void Disposed_ShouldBeTrueAfterDisposal()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -59,7 +59,7 @@ namespace HawkEye.UnitTests
         }
 
         [Fact]
-        public void Children_ShouldBeEmptyListAfterConstruction()
+        public void Children_ShouldBeEmptyAfterConstruction()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -105,16 +105,14 @@ namespace HawkEye.UnitTests
             LoggingSection loggingSection = new LoggingSection(this);
 
             //Act
-            new LoggingSection(this, loggingSection);
+            LoggingSection child1 = new LoggingSection(this, loggingSection);
+            LoggingSection child2 = new LoggingSection(this, loggingSection);
+            IReadOnlyCollection<LoggingSection> children = loggingSection.GetChildren();
 
             //Assert
-            Assert.Equal(1, loggingSection.GetChildren().Count);
-
-            //Act
-            new LoggingSection(this, loggingSection);
-
-            //Assert
-            Assert.Equal(2, loggingSection.GetChildren().Count);
+            Assert.Equal(2, children.Count);
+            Assert.Contains(child1, children);
+            Assert.Contains(child2, children);
         }
 
         [Fact]
