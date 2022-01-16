@@ -5,8 +5,14 @@ using Xunit;
 
 namespace HawkEye.UnitTests
 {
+    /// <summary>
+    /// This class contains Unit Tests for the LoggingSection class of the Logging Framework.
+    /// </summary>
     public class LoggingSectionTests
     {
+        /// <summary>
+        /// This test checks that a LoggingSection is not initially marked as disposed.
+        /// </summary>
         [Fact]
         public void Disposed_ShouldBeFalseAfterConstruction()
         {
@@ -19,6 +25,9 @@ namespace HawkEye.UnitTests
             Assert.False(loggingSection.Disposed);
         }
 
+        /// <summary>
+        /// This test checks that a LoggingSection is marked as disposed after calling Dispose() on it.
+        /// </summary>
         [Fact]
         public void Disposed_ShouldBeTrueAfterDisposal()
         {
@@ -32,6 +41,9 @@ namespace HawkEye.UnitTests
             Assert.True(loggingSection.Disposed);
         }
 
+        /// <summary>
+        /// This test checks that GetLogMessages() returns null when used on a disposed LoggingSection.
+        /// </summary>
         [Fact]
         public void GetLogMessages_ShouldReturnNullAfterDisposal()
         {
@@ -45,6 +57,9 @@ namespace HawkEye.UnitTests
             Assert.Null(loggingSection.GetLogMessages());
         }
 
+        /// <summary>
+        /// This test checks that GetChildren() returns null when used on a disposed LoggingSection.
+        /// </summary>
         [Fact]
         public void GetChildren_ShouldReturnNullAfterDisposal()
         {
@@ -55,9 +70,12 @@ namespace HawkEye.UnitTests
             loggingSection.Dispose();
 
             //Assert
-            Assert.Null(loggingSection.GetLogMessages());
+            Assert.Null(loggingSection.GetChildren());
         }
 
+        /// <summary>
+        /// This test checks that a LoggingSection's list of children is initally empty.
+        /// </summary>
         [Fact]
         public void Children_ShouldBeEmptyAfterConstruction()
         {
@@ -71,6 +89,9 @@ namespace HawkEye.UnitTests
             Assert.True(loggingSection.GetChildren().Count == 0);
         }
 
+        /// <summary>
+        /// This test checks that a LoggingSection's list of LogMessages is initally empty.
+        /// </summary>
         [Fact]
         public void LogMessages_ShouldBeEmptyAfterConstruction()
         {
@@ -84,6 +105,9 @@ namespace HawkEye.UnitTests
             Assert.True(loggingSection.GetLogMessages().Count == 0);
         }
 
+        /// <summary>
+        /// This test checks that a LoggingSection's list of LogMessages is not empty after logging.
+        /// </summary>
         [Fact]
         public void LogMessages_ShouldHaveOneEntryAfterLogging()
         {
@@ -98,8 +122,11 @@ namespace HawkEye.UnitTests
             Assert.True(loggingSection.GetLogMessages().Count == 1);
         }
 
+        /// <summary>
+        /// This test checks that children register themselves in their parents' list of children.
+        /// </summary>
         [Fact]
-        public void CreateChild_ShouldAddChildToList()
+        public void CreateChild_ShouldAddChildToParentsChildrenList()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
@@ -115,6 +142,9 @@ namespace HawkEye.UnitTests
             Assert.Contains(child2, children);
         }
 
+        /// <summary>
+        /// This test checks that children set their parent LoggingSections correctly.
+        /// </summary>
         [Fact]
         public void CreateChild_ParentShouldBeSetInChild()
         {
@@ -128,19 +158,9 @@ namespace HawkEye.UnitTests
             Assert.Equal(loggingSection, child.Parent);
         }
 
-        [Fact]
-        public void CreateChild_ParentshouldContainChild()
-        {
-            //Arrange
-            LoggingSection loggingSection = new LoggingSection(this);
-
-            //Act
-            LoggingSection child = new LoggingSection(this, loggingSection);
-
-            //Assert
-            Assert.Contains(child, loggingSection.GetChildren());
-        }
-
+        /// <summary>
+        /// This test checks that the LoggingSection constructor sets the correct name from a given string.
+        /// </summary>
         [Fact]
         public void LoggingSection_CorrectNameShouldBeSetFromString()
         {
@@ -153,6 +173,9 @@ namespace HawkEye.UnitTests
             Assert.Equal("Test", loggingSection.Name);
         }
 
+        /// <summary>
+        /// This test checks that the LoggingSection constructor sets the correct name from a given object without generic types.
+        /// </summary>
         [Fact]
         public void LoggingSection_CorrectNameShouldBeSetFromObject()
         {
@@ -165,6 +188,9 @@ namespace HawkEye.UnitTests
             Assert.Equal("LoggingSectionTests", loggingSection.Name);
         }
 
+        /// <summary>
+        /// This test checks that the LoggingSection constructor sets the correct name from a given object with a generic type.
+        /// </summary>
         [Fact]
         public void LoggingSection_CorrectNameShouldBeSetFromObjectWithGenericType()
         {
@@ -179,6 +205,9 @@ namespace HawkEye.UnitTests
             Assert.Equal("List`1<Object>", loggingSection.Name);
         }
 
+        /// <summary>
+        /// This test checks that the produced LogMessage by Debug() has the Debug level
+        /// </summary>
         [Fact]
         public void Log_ReturnedLogMessage_ShouldHaveLogLevelDebug()
         {
@@ -187,13 +216,16 @@ namespace HawkEye.UnitTests
             LogMessage logMessage;
 
             //Act
-            logMessage = loggingSection.Log(LogLevel.DEBUG, "Test");
+            logMessage = loggingSection.Debug("Test");
 
             //Assert
             Assert.NotNull(logMessage);
             Assert.Equal(LogLevel.DEBUG, logMessage.LogLevel);
         }
 
+        /// <summary>
+        /// This test checks that the produced LogMessage by Verbose() has the Verbose level
+        /// </summary>
         [Fact]
         public void Log_ReturnedLogMessage_ShouldHaveLogLevelVerbose()
         {
@@ -202,13 +234,16 @@ namespace HawkEye.UnitTests
             LogMessage logMessage;
 
             //Act
-            logMessage = loggingSection.Log(LogLevel.VERBOSE, "Test");
+            logMessage = loggingSection.Verbose("Test");
 
             //Assert
             Assert.NotNull(logMessage);
             Assert.Equal(LogLevel.VERBOSE, logMessage.LogLevel);
         }
 
+        /// <summary>
+        /// This test checks that the produced LogMessage by Info() has the Info level
+        /// </summary>
         [Fact]
         public void Log_ReturnedLogMessage_ShouldHaveLogLevelInfo()
         {
@@ -217,13 +252,16 @@ namespace HawkEye.UnitTests
             LogMessage logMessage;
 
             //Act
-            logMessage = loggingSection.Log(LogLevel.INFO, "Test");
+            logMessage = loggingSection.Info("Test");
 
             //Assert
             Assert.NotNull(logMessage);
             Assert.Equal(LogLevel.INFO, logMessage.LogLevel);
         }
 
+        /// <summary>
+        /// This test checks that the produced LogMessage by Warning() has the Warning level
+        /// </summary>
         [Fact]
         public void Log_ReturnedLogMessage_ShouldHaveLogLevelWarning()
         {
@@ -232,13 +270,16 @@ namespace HawkEye.UnitTests
             LogMessage logMessage;
 
             //Act
-            logMessage = loggingSection.Log(LogLevel.WARNING, "Test");
+            logMessage = loggingSection.Warning("Test");
 
             //Assert
             Assert.NotNull(logMessage);
             Assert.Equal(LogLevel.WARNING, logMessage.LogLevel);
         }
 
+        /// <summary>
+        /// This test checks that the produced LogMessage by Error() has the Error level
+        /// </summary>
         [Fact]
         public void Log_ReturnedLogMessage_ShouldHaveLogLevelError()
         {
@@ -247,13 +288,16 @@ namespace HawkEye.UnitTests
             LogMessage logMessage;
 
             //Act
-            logMessage = loggingSection.Log(LogLevel.ERROR, "Test");
+            logMessage = loggingSection.Error("Test");
 
             //Assert
             Assert.NotNull(logMessage);
             Assert.Equal(LogLevel.ERROR, logMessage.LogLevel);
         }
 
+        /// <summary>
+        /// This test checks that the produced LogMessage by Critical() has the Critical level
+        /// </summary>
         [Fact]
         public void Log_ReturnedLogMessage_ShouldHaveLogLevelCritical()
         {
@@ -262,7 +306,7 @@ namespace HawkEye.UnitTests
             LogMessage logMessage;
 
             //Act
-            logMessage = loggingSection.Log(LogLevel.CRITICAL, "Test");
+            logMessage = loggingSection.Critical("Test");
 
             //Assert
             Assert.NotNull(logMessage);

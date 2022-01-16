@@ -9,8 +9,14 @@ using Xunit;
 
 namespace HawkEye.UnitTests
 {
+    /// <summary>
+    /// This class contains Unit Tests for the Logger class of the Logging Framework.
+    /// </summary>
     public class LoggerTests
     {
+        /// <summary>
+        /// This test checks that registered LogHandlers are being called by Logger.Log().
+        /// </summary>
         [Fact]
         public void Log_ShouldTriggerLogHandlers()
         {

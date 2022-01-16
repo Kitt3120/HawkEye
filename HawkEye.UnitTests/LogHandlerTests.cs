@@ -9,6 +9,9 @@ using Xunit;
 
 namespace HawkEye.UnitTests
 {
+    /// <summary>
+    /// This is a dummy LogHandler used by the Unit Tests
+    /// </summary>
     public class TestLogHandler : LogHandler
     {
         public bool Triggered { get; private set; }
@@ -24,8 +27,14 @@ namespace HawkEye.UnitTests
         }
     }
 
+    /// <summary>
+    /// This class contains Unit Tests for the LogHandler class of the Logging Framework.
+    /// </summary>
     public class LogHandlerTests
     {
+        /// <summary>
+        /// This test checks that a LogHandler has all LogLevels enabled by default.
+        /// </summary>
         [Fact]
         public void LogHandler_ShouldHaveAllLevelsEnabledByDefault()
         {
@@ -42,6 +51,9 @@ namespace HawkEye.UnitTests
             Assert.False(listOfAllLogLevels.Except(testLogHandlerLogLevels).Any()); //Subtracting both lists should result in an empty list. If not, it means that one of the lists contained a LogLevel multiple times, which is an invalid state.
         }
 
+        /// <summary>
+        /// This test checks that a LogHandler has all LogLevels enabled that have been passed to the constructer.
+        /// </summary>
         [Fact]
         public void LogHandler_ShouldCopyProvidedArrayOfEnabledLogLevels()
         {
@@ -72,6 +84,9 @@ namespace HawkEye.UnitTests
             Assert.False(logLevels3.Except(testLogHandlerLogLevels3).Any());
         }
 
+        /// <summary>
+        /// This test checks that a LogLevel is being enabled by Enable().
+        /// </summary>
         [Fact]
         public void Enable_ShouldEnableLogLevel()
         {
@@ -85,6 +100,9 @@ namespace HawkEye.UnitTests
             Assert.True(testLogHandler.IsEnabled(LogLevel.INFO));
         }
 
+        /// <summary>
+        /// This test checks that a LogLevel is being disabled by Disable().
+        /// </summary>
         [Fact]
         public void Disable_ShouldDisableLogLevel()
         {
@@ -98,6 +116,9 @@ namespace HawkEye.UnitTests
             Assert.False(testLogHandler.IsEnabled(LogLevel.INFO));
         }
 
+        /// <summary>
+        /// This test checks that a LogHandler is being triggered by a LogMessage of an enabled LogLevel.
+        /// </summary>
         [Fact]
         public void LogHandler_ShouldTriggerIfLogLevelEnabled()
         {
@@ -113,6 +134,9 @@ namespace HawkEye.UnitTests
             Assert.True(testLogHandler.Triggered);
         }
 
+        /// <summary>
+        /// This test checks that a LogHandler isn't being triggered by a LogMessage of a disabled LogLevel.
+        /// </summary>
         [Fact]
         public void LogHandler_ShouldNotTriggerIfLogLevelDisabled()
         {
