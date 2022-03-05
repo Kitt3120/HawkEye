@@ -6,25 +6,33 @@ using System.Threading.Tasks;
 
 namespace HawkEye.Scanning
 {
+    /// <summary>
+    /// Indications for a scan's state
+    /// </summary>
     public enum ScanStatus
     {
         /// <summary>
-        /// Indicates that a Scan is still pending and awaiting future execution
+        /// Indicates that a scan is still pending and awaiting future execution
         /// </summary>
         Pending,
 
         /// <summary>
-        /// Indicates that a Scan is currently running
+        /// Indicates that a scan is currently running
         /// </summary>
         Running,
 
         /// <summary>
-        /// Indicates that a Scan was pending or running and has been aborted
+        /// Indicates that a scan is finished
+        /// </summary>
+        Finished,
+
+        /// <summary>
+        /// Indicates that a scan was pending or running and has been aborted
         /// </summary>
         Aborted,
 
         /// <summary>
-        /// Indicates that a Scan has run into an exception and did not finish successfully
+        /// Indicates that a scan has run into an exception and did not finish successfully
         /// </summary>
         Failed
     }
