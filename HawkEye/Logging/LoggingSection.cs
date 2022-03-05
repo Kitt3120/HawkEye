@@ -94,27 +94,16 @@ namespace HawkEye.Logging
         /// Constructs a LoggingSection.
         /// </summary>
         /// <param name="obj">Object that should provide the name of the LoggingSection</param>
-        /// <param name="parent">Parent LoggingSection</param>
-        public LoggingSection(object obj, LoggingSection parent = null) : this(obj.GetType().Name + (obj.GetType().GenericTypeArguments.Length > 0 ? $"<{string.Join(", ", obj.GetType().GenericTypeArguments.Select(type => type.Name))}>" : ""), parent)
+        public LoggingSection(object obj) : this(obj.GetType().Name + (obj.GetType().GenericTypeArguments.Length > 0 ? $"<{string.Join(", ", obj.GetType().GenericTypeArguments.Select(type => type.Name))}>" : ""))
         { }
 
         /// <summary>
         /// Constructs a LoggingSection.
         /// </summary>
         /// <param name="name">Name of the LoggingSection</param>
-        /// <param name="parent">Parent LoggingSection</param>
-        public LoggingSection(string name, LoggingSection parent = null)
+        public LoggingSection(string name)
         {
             Name = name;
-
-            if (parent != null)
-            {
-                lock (parent.childrenLock)
-                {
-                    Parent = parent;
-                    parent.children.Add(this);
-                }
-            }
 
             children = new List<LoggingSection>();
             logMessages = new List<LogMessage>();
@@ -123,6 +112,27 @@ namespace HawkEye.Logging
             logMessagesLock = new object();
 
             Disposed = false;
+        }
+
+        /// <summary>
+        /// Creates a LoggingSection, sets its parent to this LoggingSection and registers the child.
+        /// </summary>
+        /// <param name="obj">Object that should provide the name of the LoggingSection</param>
+        /// <returns>LoggingSection that has this LoggingSection set as parent.</returns>
+        public LoggingSection CreateChild(object obj) => CreateChild(obj.GetType().Name + (obj.GetType().GenericTypeArguments.Length > 0 ? $"<{string.Join(", ", obj.GetType().GenericTypeArguments.Select(type => type.Name))}>" : ""));
+
+        /// <summary>
+        /// Creates a LoggingSection, sets its parent to this LoggingSection and registers the child.
+        /// </summary>
+        /// <param name="name">Name of the LoggingSection</param>
+        /// <returns>LoggingSection that has this LoggingSection set as parent.</returns>
+        public LoggingSection CreateChild(string name)
+        {
+            LoggingSection child = new LoggingSection(name);
+            child.Parent = this;
+            lock (childrenLock)
+                children.Add(child);
+            return child;
         }
 
         /// <summary>

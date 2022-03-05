@@ -126,14 +126,14 @@ namespace HawkEye.UnitTests
         /// This test checks that children register themselves in their parents' list of children.
         /// </summary>
         [Fact]
-        public void CreateChild_ShouldAddChildToParentsChildrenList()
+        public void CreateChild_ShouldAddChildToChildrenList()
         {
             //Arrange
             LoggingSection loggingSection = new LoggingSection(this);
 
             //Act
-            LoggingSection child1 = new LoggingSection(this, loggingSection);
-            LoggingSection child2 = new LoggingSection(this, loggingSection);
+            LoggingSection child1 = loggingSection.CreateChild(this);
+            LoggingSection child2 = loggingSection.CreateChild(this);
             IReadOnlyCollection<LoggingSection> children = loggingSection.GetChildren();
 
             //Assert
@@ -152,7 +152,7 @@ namespace HawkEye.UnitTests
             LoggingSection loggingSection = new LoggingSection(this);
 
             //Act
-            LoggingSection child = new LoggingSection(this, loggingSection);
+            LoggingSection child = loggingSection.CreateChild(this);
 
             //Assert
             Assert.Equal(loggingSection, child.Parent);
