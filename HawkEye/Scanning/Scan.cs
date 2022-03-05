@@ -61,7 +61,7 @@ namespace HawkEye.Scanning
         public ScanStatus Status { get; protected internal set; }
 
         /// <summary>
-        /// Result gathered by the scanner from the target file.
+        /// Result data gathered by the scanner from the target file.
         /// </summary>
         public string Result { get; protected internal set; }
 
