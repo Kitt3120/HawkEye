@@ -13,6 +13,10 @@ namespace HawkEye.Scanning
     public class Scan
     {
         /// <summary>
+        /// DateTime of when the scan was created.
+        /// </summary>
+        public DateTime TimeOfCreation { get; private set; }
+        /// <summary>
         /// DateTime of when the scan started.
         /// </summary>
         public DateTime BeginOfScan { get; protected internal set; }
@@ -24,8 +28,9 @@ namespace HawkEye.Scanning
 
         /// <summary>
         /// Calculates the TimeSpan between begin and end of scan.
-        /// If the scan has not started yet, the TimeSpan will be of 0 ticks.
+        /// If the scan is pending, the TimeSpan will represent the pending duration.
         /// If the scan is running, returns the TimeSpan since start of scan.
+        /// If the scan is finished, returns the TimeSpan from start to end of scan.
         /// </summary>
         public TimeSpan TimeSpan
         {
@@ -34,13 +39,17 @@ namespace HawkEye.Scanning
                 switch (Status)
                 {
                     case ScanStatus.Pending:
-                        return new TimeSpan(0);
+                        return DateTime.Now - TimeOfCreation;
 
                     case ScanStatus.Running:
                         return DateTime.Now - BeginOfScan;
 
-                    default:
+                    case ScanStatus.Finished:
+                    case ScanStatus.Aborted:
+                    case ScanStatus.Failed:
                         return EndOfScan - BeginOfScan;
+                    default: //Only possible when a new ScanStatus type has been added but not yet implemented here
+                        return new TimeSpan(0);
                 }
             }
         }
@@ -74,9 +83,9 @@ namespace HawkEye.Scanning
         /// <summary>
         /// CancellationToken to give information about whether a cancellation has been requested.
         /// </summary>
-        private CancellationToken cancellationToken;
+        private readonly CancellationToken cancellationToken;
 
-        //TODO: Add issuer property (User or issued through automated job)
+        //TODO: Add issuer property (Manually through user or issued through automated job)
 
         /// <summary>
         /// Constructs a Scan.
@@ -89,6 +98,7 @@ namespace HawkEye.Scanning
             Scanner = scanner;
             File = file;
             this.cancellationToken = cancellationToken;
+            TimeOfCreation = DateTime.Now;
             Status = ScanStatus.Pending;
         }
 
@@ -102,7 +112,7 @@ namespace HawkEye.Scanning
 
             if (cancellationToken.IsCancellationRequested)
             {
-                Result = "Scan aborted before any data could be gathered.";
+                Result = "Cancellation requested before any data could be gathered.";
                 Status = ScanStatus.Aborted;
             }
             else
@@ -114,6 +124,7 @@ namespace HawkEye.Scanning
                 }
                 catch (Exception e)
                 {
+                    Result = $"{e.Message} thrown while scanning.";
                     Status = ScanStatus.Failed;
                     ThrownException = e;
                 }
